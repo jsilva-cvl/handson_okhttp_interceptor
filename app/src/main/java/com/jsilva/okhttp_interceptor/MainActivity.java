@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 webView = (WebView) findViewById(R.id.webView);
                 webView.setWebViewClient(createOkhttpClient());
-                System.out.println("LOADING ");
                 webView.loadUrl("https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_UY268_CR1,0,182,268_AL_.jpg");
             }
         });
@@ -83,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
                         CacheControl.FORCE_NETWORK).build();
                 try {
                     Response response = okHttpClient.newCall(okHttpRequest).execute();
+                    System.out.println(response.code());
                     WebResourceResponse webResource = new WebResourceResponse("", "", response.body().byteStream());
                     return webResource;
                 } catch (IOException e) {

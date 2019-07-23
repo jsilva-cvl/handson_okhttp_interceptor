@@ -2,10 +2,7 @@ package com.jsilva.okhttp_interceptor;
 
 import java.io.IOException;
 
-import okhttp3.CacheControl;
-import okhttp3.Headers;
 import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -20,17 +17,15 @@ public class InterceptRequest implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
 
-        // creates a client and a request to perform the Http call
-        OkHttpClient okHttpClient = new OkHttpClient().newBuilder().build();
-        Request.Builder requestBuilder = new Request.Builder().url(NEW_URL).cacheControl(CacheControl.FORCE_NETWORK);
+        Request.Builder requestBuilder = chain.request().newBuilder();
 
-        // copies all the original headers into the new request
-        Headers headers = chain.request().headers();
-        for (String name : headers.names()) {
-            requestBuilder.addHeader(name, headers.get(name));
-        }
+        //adding a header to the original request
+        requestBuilder.addHeader("X-Been","Intercepted");
+
+        //changing the URL
+        requestBuilder.url(NEW_URL);
 
         //returns a response
-        return okHttpClient.newCall(requestBuilder.build()).execute();
+        return chain.proceed(requestBuilder.build());
     }
 }
